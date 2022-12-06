@@ -1,0 +1,19 @@
+{
+  "name": "redis",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc index.ts",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.7.5",
+    "mongoose-dummy": "^1.0.8",
+    "redis": "^4.5.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  }
+}
