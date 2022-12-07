@@ -15,18 +15,28 @@ app.get('/', async (req, res) => {
     res.send('Hello World!');
 })
 
-app.get('/all', async (req, res) => {
-    let allUser = await User.find({});
-    let cachedUsers = await redisClient.get('users');
-    if (cachedUsers) {
-        console.log("Getting from cache");
-        res.send(JSON.parse(cachedUsers));
+app.get('/mongodb', async (req, res) => {
+    var allUser = await User.find();
+    res.send(allUser)
+    redisClient.get('users')
+    .then(data => {
+        if(data) {
+            console.log('Data already in redis')
+        } else {
+            redisClient.setEx('users', 60 , JSON.stringify(allUser))
+            console.log('Data saved in redis')
+        }
+    })
+})
+
+app.get('/redis', async (req, res) => {
+    var cachedUsers = await redisClient.get('users')
+    if(cachedUsers) {
+    res.send(JSON.parse(cachedUsers))
     } else {
-        console.log("Getting from DB");
-        res.send(allUser);
-        await redisClient.set('users', JSON.stringify(allUser));
+        res.send('No data in redis')
     }
-});
+})
 
 app.listen(8080, function () {
     console.log("Server started on port 8080");
